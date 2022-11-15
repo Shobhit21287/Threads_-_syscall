@@ -62,24 +62,30 @@ int main(){
     pthread_attr_setschedpolicy(&attr2,SCHED_RR);
     pthread_attr_setschedpolicy(&attr3,SCHED_FIFO);
 
-    time_t start1 = time(NULL);
+    clock_t s,t;
+        
+    s = clock();
     pthread_create(&ThrA,&attr1,function,NULL);
-    pthread_create(&ThrB,&attr2,function,NULL);
-    pthread_create(&ThrC,&attr3,function,NULL);
-
     pthread_join(ThrA,NULL);
+    t = clock();
     printf("Thread A :");
-    time_t end1 = time(NULL) - start1;
-    printf("%0.4f \n",(double)end1);
+    double total_t = (double)(t-s) / CLOCKS_PER_SEC;
+    printf("%f \n",total_t);
 
+    s = clock();
+    pthread_create(&ThrB,&attr2,function,NULL);
     pthread_join(ThrB,NULL);
+    t = clock();
+    total_t = (double)(t-s) / CLOCKS_PER_SEC;
     printf("Thread B :");
-    time_t end2 = time(NULL) - start1;
-    printf("%0.4f \n",(double)end2);
+    printf("%f \n",total_t);
 
+    s = clock();
+    pthread_create(&ThrC,&attr3,function,NULL);
     pthread_join(ThrC,NULL);
+    t = clock();
+    total_t = (double)(t-s) / CLOCKS_PER_SEC;
     printf("Thread C :");
-    time_t end3 = time(NULL) - start1;
-    printf("%0.4f \n",(double)end3);
+    printf("%f \n",total_t);
 
 }
