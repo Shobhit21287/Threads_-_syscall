@@ -3,6 +3,7 @@
 #include <math.h>
 #include <pthread.h>
 #include <time.h>
+#include <string.h>
 
 void *countA(){
     int i = 1;
@@ -29,18 +30,23 @@ void *countC(){
 }
 
 void *function(){
+    time_t start_t,end_t;
+    time(&start_t);
     countA();
     countB();
     countC();
+    // char * thr = "Thread ";
+    // strcat(thr,bruh);
+    // strcat(thr," :");
+    time(&end_t);
+    double total_t = (double) end_t - start_t;
+    printf(" %f ",total_t);
 }
 
 int main(){
     pthread_t ThrA;
     pthread_t ThrB;
     pthread_t ThrC;
-    int rt1,rt2,rt3; //cumulative time of running
-
-    int test_cases = 0; //number of times the program has run
 
     struct sched_param forA; //parameters for the 3 threads
     struct sched_param forB;
@@ -62,30 +68,36 @@ int main(){
     pthread_attr_setschedpolicy(&attr2,SCHED_RR);
     pthread_attr_setschedpolicy(&attr3,SCHED_FIFO);
 
-    clock_t s,t;
-        
-    s = clock();
+    (forB.sched_priority = 12);
+    (forC.sched_priority = 15);
+
+    //s = clock();
     pthread_create(&ThrA,&attr1,function,NULL);
-    pthread_join(ThrA,NULL);
-    t = clock();
-    printf("Thread A :");
-    double total_t = (double)(t-s) / CLOCKS_PER_SEC;
-    printf("%f \n",total_t);
-
-    s = clock();
     pthread_create(&ThrB,&attr2,function,NULL);
-    pthread_join(ThrB,NULL);
-    t = clock();
-    total_t = (double)(t-s) / CLOCKS_PER_SEC;
-    printf("Thread B :");
-    printf("%f \n",total_t);
-
-    s = clock();
     pthread_create(&ThrC,&attr3,function,NULL);
+    pthread_join(ThrA,NULL);
+    printf(" : Thread A \n");
+    pthread_join(ThrB,NULL);
+    printf(" : Thread B \n");
     pthread_join(ThrC,NULL);
-    t = clock();
-    total_t = (double)(t-s) / CLOCKS_PER_SEC;
-    printf("Thread C :");
-    printf("%f \n",total_t);
+    printf(" : Thread C \n");
+    //t = clock();
+    // printf("Thread A :");
+    
+    //printf("%f \n",total_t);
+
+    //s = clock();
+    
+    ///t = clock();
+    //total_t = (double)(t-s) / CLOCKS_PER_SEC;
+    //printf("Thread B :");
+    //printf("%f \n",total_t);
+
+    //s = clock();
+    
+    //t = clock();
+    //total_t = (double)(t-s) / CLOCKS_PER_SEC;
+    //printf("Thread C :");
+    //printf("%f \n",total_t);
 
 }
